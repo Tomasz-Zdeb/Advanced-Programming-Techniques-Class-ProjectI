@@ -1,4 +1,4 @@
-# Zadanie 1 - Tomasz Zdeb
+# Projekt 1 - Tomasz Zdeb
 
 Zgodnie z poleceniem zadania, będę starał implementować aplikację zgodnie z architekturą [N-Layer](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures).
 
@@ -26,3 +26,13 @@ dotnet new gitignore
 - Wartswa dostępu do danych - `ProductService.Infrastructure`
 
 - Artykuł: [dotnet new gitignore](https://dev.to/rafalpienkowski/easy-to-create-gitignore-for-the-dotnet-developers-1h42)
+
+## Inicjalizacja Bazy Danych
+
+Baza danych wykorzystana do development to [SQL Server Express w kontenerze OCI](https://learn.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver17&tabs=cli&pivots=cs1-bash). Niestandardowy obraz silnika bazy danych nie jest tworzony, zamiast tego w ramach projektu wykorzystany jest bezpośrednio obraz dostarczany przez Microsoft. Uruchomienie kontenera można przeprowadzić m.in. za pomocą pliku `docker-compose.yml` dołączonego do repozytorium. 
+
+Wykonanie pliku `docker-compose.yml` przeprowdza się za pomocą komendy `docker-compose up`, można dodać opcjonalnie flagę `-d` (od *detached*) aby proces został uruchomiony w tle i nie blokował okna terminala.
+
+W celu wyłączenia projektu zdefiniowanego w `docker-compose.yml` wykorzystuje się komendę `docker-compose down`
+
+Przy zastosowaniu podejścia opartego o narzędzie `docker-compose`, należy być świadomym utworzenia `volume` dla kontenera bazy. W celu przeprowadzenia pełnego testu *white room*, należy usunąć istniejący `volume`.
