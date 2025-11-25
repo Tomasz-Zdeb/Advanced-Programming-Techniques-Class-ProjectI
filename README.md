@@ -63,8 +63,6 @@ Następnie aby aplikować migrację należy wykonać komendę:
 dotnet-ef database update -p ProductService.Infrastructure -s ProductService.API
 ```
 
-
-
 ## Konfiguracja Połączenia Serwisu z Bazą Danych
 
 1. Konfiguracja lokalnego sekretu - wzorowane na artykule:
@@ -93,3 +91,29 @@ Wykonanie pliku `docker-compose.yml` przeprowdza się za pomocą komendy `docker
 W celu wyłączenia projektu zdefiniowanego w `docker-compose.yml` wykorzystuje się komendę `docker-compose down`
 
 Przy zastosowaniu podejścia opartego o narzędzie `docker-compose`, należy być świadomym utworzenia `volume` dla kontenera bazy. W celu przeprowadzenia pełnego testu *white room*, należy usunąć istniejący `volume`.
+
+## Swagger UI
+
+W celu implementacji swagger UI należało
+1. Znajdując się w katalogu projektu ProductService.API dodać pakiet swashbuckle
+   ```powershell
+   dotnet add package Swashbuckle.AspNetCore
+   ```
+2. W pliku `program.cs` projektu ProductService.API dodać konfigurację:
+   ```cs
+   builder.Services.AddEndpointsApiExplorer();
+   builder.Services.AddSwaggerGen();
+   ```
+   oraz
+   ```cs
+   if (app.Environment.IsDevelopment())
+   {
+      app.UseSwagger();
+      app.UseSwaggerUI();
+   }
+   ```
+3. Usunąć automatycznie wygenerowaną konfigurację builder i app dla OpenApi, ponieważ generuje ona błędy. Szczegóły usuniętych zmian można prześledzić w histori zmian repozytorium.
+
+Ponadto dla konfiguracji `Development` skonfigurowane zostało przekierowanie z root `URL/` na `.../swagger`, można to łatwo wywnioskować z zawartości pliku `program.cs`
+
+https://learn.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-8.0&tabs=visual-studio
