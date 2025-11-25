@@ -117,3 +117,46 @@ W celu implementacji swagger UI należało
 Ponadto dla konfiguracji `Development` skonfigurowane zostało przekierowanie z root `URL/` na `.../swagger`, można to łatwo wywnioskować z zawartości pliku `program.cs`
 
 https://learn.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-8.0&tabs=visual-studio
+
+## Zarządzanie Migracjami Bazy Danych
+
+### Przywracanie stanu do wskazanej migracji
+
+> Komenda została udokumentowana na wszelki wypadek, na szczęście na razie nie zaszła potrzeba skorzystania z niej.
+
+```powershell
+# pytanie czy należy dodać -p tak jak przy począkowej migracji?
+dotnet ef database update [NAZWA_MIGRACJI] -s ProductService.API
+```
+
+### Usuwanie danej migracji
+
+Aby usunąć ostatnie migracje, należy przywrócić stan do konkretnej migracji a następnie usunąć - **pytanie czy tylko ostatnią, czy wszystkie niezastosowane** - z użyciem niniejszej komendy
+
+```powershell
+dotnet-ef migrations remove -s ProductService.API -p ProductService.Infrastructure
+```
+
+### Tworzenie nowej migracji
+
+Odbywa się tak samo jak tworzenie początkowej migracji.
+
+```powershell
+dotnet-ef migrations add UpdateProductAccordingToTaskDescription -p ProductService.Infrastructure -s ProductService.API
+```
+
+### Wypisanie listy migracji
+
+```powershell
+dotnet-ef migrations list -p ProductService.Infrastructure -s ProductService.API
+```
+
+### Wykonanie migracji
+
+Przeprowadzane jest identycznie jak dla początkowej migracji.
+
+```powershell
+dotnet-ef database update -p ProductService.Infrastructure -s ProductService.API
+```
+
+https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/managing?tabs=dotnet-core-cli

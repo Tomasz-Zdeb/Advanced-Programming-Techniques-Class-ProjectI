@@ -13,9 +13,15 @@ namespace ProductService.Infrastructure
 
         //Proces seedowania danymi testowymi wzorowałem na dokumentacji Microsoft:
         //https://learn.microsoft.com/en-us/ef/core/modeling/data-seeding#model-seed-data
+        //Mapowanie wartośći decimal z kolei na artykule:
+        //https://learn.microsoft.com/en-us/ef/core/modeling/entity-properties?tabs=data-annotations%2Cwith-nrt#precision-and-scale
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Product>().Property(p => p.Price).HasPrecision(18, 2); 
             modelBuilder.Entity<Product>().HasData(ProductGenerator.GetTestData());
         }
+
+
+        
     }
 }

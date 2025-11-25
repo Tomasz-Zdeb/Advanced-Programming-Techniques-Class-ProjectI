@@ -1,11 +1,13 @@
 ﻿namespace ProductService.Infrastructure.Entities
 {
-// Oczywiście klasa produktu pod żadnym pozorem nie będzie mieć tak banalnej formy. Aktualnie wygląda w ten uproszczony sposób na potrzeby konfiguracji
-// połączenia z bazą danych za pomocą Entity Framework
+    // Chcąc dalej rozwijać model poza minimalne wymagania wynikające z polecenia zadania
+    // możnaby np. zastanowić się nad utworzeniem pola określającego walutę.
     public class Product
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public required string Name { get; set; }
         public decimal Price { get; set; }
+        public ProductCategory Category { get; set; }
+        public int Quantity { get; set; }
     }
 }
