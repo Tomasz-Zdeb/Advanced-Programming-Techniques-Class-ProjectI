@@ -160,3 +160,23 @@ dotnet-ef database update -p ProductService.Infrastructure -s ProductService.API
 ```
 
 https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/managing?tabs=dotnet-core-cli
+
+## Materiały Wykorzystane do Implementacji Rozwiązania
+
+- https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/records
+- https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-10.0#binding-source-parameter-inference
+- https://learn.microsoft.com/en-us/ef/core/querying/tracking - W skrócie non-tracking queries tylko dla read-only. Tracking dla pozostałych.
+- https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection#service-lifetimes - Cykle życia: transient, scoped, singleton.
+- https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli#apply-migrations-at-runtime - Aplikowanie migracji wewnątrz kodu aplikacji.
+- https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-10.0#middleware-order - Kolejność middleware (ważna kwestia!)
+
+## Problem ze swaggerem po implementacji kontrolera/serwisów/repozytoriów
+
+W projekcie `ProductService.API` w trakcie wykonywania *app.MapControllers();* rzucany był wyjątek związany z niemożnością dynamicznego zalinkowania bibliotek związanych z OpenAPI.
+
+Pomogło usunięcie ówczesnej wersji zależności `Swashbuckle` i downgrade do niższej wersji:
+
+```powershell
+# O dziwo ta wersja działa w przeciwieństwie do 10.x
+dotnet add package Swashbuckle.AspNetCore --version 6.9.0
+```
