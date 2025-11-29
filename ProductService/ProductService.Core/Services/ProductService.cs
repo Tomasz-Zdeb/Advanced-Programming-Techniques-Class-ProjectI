@@ -1,4 +1,5 @@
 ﻿using ProductService.Core.DTO;
+using ProductService.Core.Exceptions;
 using ProductService.Core.Specifications;
 using ProductService.Infrastructure.Entities;
 using ProductService.Infrastructure.Repositories;
@@ -93,21 +94,31 @@ namespace ProductService.Core.Services
 
         public async Task DeleteAsync(int id)
         {
+            var product = await _repository.GetByIdAsync(id);
+            if (product == null)
+                throw new NotFoundException($"Product with id {id} not found");
+
             await _repository.DeleteAsync(id);
         }
 
         private void PerformDomainValidation(Product product, int? currentProductId = null)
         {
-            var nameSpec = new ProductNameLengthSpecification()
+            var uniqueSpec = new UniqueProductNameSpecification(_repository, currentProductId);
+            if (!uniqueSpec.IsSatisfiedBy(product))
+            {
+                throw new ConflictException(uniqueSpec.GetErrorMessage());
+            }
+
+
+            var Specs = new ProductNameLengthSpecification()
                 .And(new ProductNameAlphanumericSpecification())
                 .And(new ProductPriceRangeSpecification())
                 .And(new ProductQuantitySpecification())
-                .And(new UniqueProductNameSpecification(_repository, currentProductId))
                 .And(new ForbiddenWordsSpecification(_forbiddenWordRepository));
 
-            if (!nameSpec.IsSatisfiedBy(product))
+            if (!Specs.IsSatisfiedBy(product))
             {
-                throw new ValidationException(nameSpec.GetErrorMessage());
+                throw new ValidationException(Specs.GetErrorMessage());
             }
 
         }
