@@ -1,16 +1,21 @@
 ﻿using ProductService.Core.DTO;
+using ProductService.Core.Specifications;
 using ProductService.Infrastructure.Entities;
 using ProductService.Infrastructure.Repositories;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProductService.Core.Services
 {
     public class ProductService : IProductService
     {
         private readonly IProductRepository _repository;
+        private readonly IForbiddenWordRepository _forbiddenWordRepository;
 
-        public ProductService(IProductRepository repository)
+        public ProductService(IProductRepository repository,
+            IForbiddenWordRepository forbiddenWordRepository)
         {
             _repository = repository;
+            _forbiddenWordRepository = forbiddenWordRepository;
         }
 
         public async Task<IEnumerable<ProductListDto>> GetAllAsync()
@@ -40,7 +45,6 @@ namespace ProductService.Core.Services
 
         public async Task<ProductDetailsDto> CreateAsync(ProductCreateDto dto)
         {
-            // Prawodopodobnie w tym miejscu będzie miała walidacja po implemetacji wzorca specyfikacji
 
             var product = new Product
             {
@@ -49,6 +53,8 @@ namespace ProductService.Core.Services
                 Category = Enum.Parse<ProductCategory>(dto.Category),
                 Quantity = dto.Quantity
             };
+
+            PerformDomainValidation(product);
 
             var created = await _repository.AddAsync(product);
 
@@ -62,17 +68,17 @@ namespace ProductService.Core.Services
         }
 
         public async Task<ProductDetailsDto> UpdateAsync(int id, ProductUpdateDto dto)
-        {
+        { 
             var product = await _repository.GetByIdAsync(id);
             if (product == null)
                 throw new KeyNotFoundException($"Product with id {id} not found");
-
-            // Prawodopodobnie w tym miejscu będzie miała walidacja po implemetacji wzorca specyfikacji
 
             product.Name = dto.Name;
             product.Price = dto.Price;
             product.Category = Enum.Parse<ProductCategory>(dto.Category);
             product.Quantity = dto.Quantity;
+
+            PerformDomainValidation(product, id);
 
             var updated = await _repository.UpdateAsync(product);
 
@@ -88,6 +94,22 @@ namespace ProductService.Core.Services
         public async Task DeleteAsync(int id)
         {
             await _repository.DeleteAsync(id);
+        }
+
+        private void PerformDomainValidation(Product product, int? currentProductId = null)
+        {
+            var nameSpec = new ProductNameLengthSpecification()
+                .And(new ProductNameAlphanumericSpecification())
+                .And(new ProductPriceRangeSpecification())
+                .And(new ProductQuantitySpecification())
+                .And(new UniqueProductNameSpecification(_repository, currentProductId))
+                .And(new ForbiddenWordsSpecification(_forbiddenWordRepository));
+
+            if (!nameSpec.IsSatisfiedBy(product))
+            {
+                throw new ValidationException(nameSpec.GetErrorMessage());
+            }
+
         }
     }
 }

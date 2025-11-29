@@ -4,7 +4,7 @@ using ProductService.Infrastructure.Entities;
 namespace ProductService.Infrastructure.Repositories
 {
     //Zapewne dobra znajomość EF pozowliłaby na optymalizację zapytań.
-    public class ProductRepository : IProductRepository
+    internal class ProductRepository : IProductRepository
     {
         private readonly ApplicationDbContext _context;
 

@@ -180,3 +180,17 @@ Pomogło usunięcie ówczesnej wersji zależności `Swashbuckle` i downgrade do 
 # O dziwo ta wersja działa w przeciwieństwie do 10.x
 dotnet add package Swashbuckle.AspNetCore --version 6.9.0
 ```
+
+## Implementacja Wzorca Specyfikacji
+
+Zmagałem się z trudnościami technicznymi aby przeprowadzić implementację w taki sposób aby nie naruszyć zasady Open/Closed. Poniższe materiały pomogły w tym.
+
+- https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods
+
+- https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/how-to-implement-and-call-a-custom-extension-method
+
+- https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/extension-methods
+
+- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/this
+
+- https://designpatternsphp.readthedocs.io/pl/latest/Behavioral/Specification/README.html - ten materiał w bardzo niewielkim stopniu

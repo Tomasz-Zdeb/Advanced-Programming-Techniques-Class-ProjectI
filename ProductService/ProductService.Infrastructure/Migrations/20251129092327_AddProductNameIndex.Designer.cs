@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProductService.Infrastructure;
 
@@ -10,9 +11,11 @@ using ProductService.Infrastructure;
 namespace ProductService.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251129092327_AddProductNameIndex")]
+    partial class AddProductNameIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,43 +23,6 @@ namespace ProductService.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ProductService.Infrastructure.Entities.ForbiddenWord", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Word")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Word")
-                        .IsUnique();
-
-                    b.ToTable("ForbiddenWords");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Word = "python"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Word = "javascript"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Word = "mvc"
-                        });
-                });
 
             modelBuilder.Entity("ProductService.Infrastructure.Entities.Product", b =>
                 {
